@@ -25,6 +25,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface
 {
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -68,8 +69,9 @@ class User implements UserInterface
      */
     public function __construct(string $email = '', string $password = '', array $roles = [ 'ROLE_USER' ])
     {
+
         $this->email = $email;
-        $this->password = password_hash($password, PASSWORD_ARGON2ID);
+        $this->password = password_hash($password, PASSWORD_DEFAULT);
         $this->roles = $roles;
     }
 
@@ -131,7 +133,7 @@ class User implements UserInterface
 
     public function setPassword(string $password): self
     {
-        $this->password = password_hash($password, PASSWORD_ARGON2ID);
+        $this->password = password_hash($password, PASSWORD_DEFAULT);
 
         return $this;
     }
