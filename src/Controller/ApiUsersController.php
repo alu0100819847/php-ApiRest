@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Message;
+use App\Entity\Result;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -375,6 +376,60 @@ class ApiUsersController extends AbstractController
         return Utils::apiResponse(
             209,                        // 209 - Content Returned
             [ 'user' => $user ],
+            $format
+        );
+    }
+
+    /**
+     * Summary: Returns all user's results
+     * Notes: Returns all user's results from the system.
+     *
+     * @param   Request $request
+     * @param   int $userId User id
+     * @return  Response
+     * @Route(
+     *     "/{userId}/results.{_format}",
+     *     defaults={"_format": null},
+     *     requirements={
+     *         "userId": "\d+",
+     *         "_format": "json|xml"
+     *     },
+     *     methods={ Request::METHOD_GET },
+     *     name="get_results"
+     * )
+     *
+     * @Security(
+     *     expression="is_granted('IS_AUTHENTICATED_FULLY')",
+     *     statusCode=401,
+     *     message="Invalid credentials."
+     * )
+     */
+    public function getResults(Request $request, $userId): Response
+    {
+        /** @var User $user */
+        $user = $this->entityManager
+            ->getRepository(User::class)
+            ->findOneBy([ 'id' => $userId ]);
+
+        $format = Utils::getFormat($request);
+
+        if (empty($user)) {
+            $message = new Message(Response::HTTP_NOT_FOUND, Response::$statusTexts[404]);
+            return Utils::apiResponse(
+                $message->getCode(),
+                [ 'message' => $message ],
+                $format
+            );
+        }
+
+        /** @var Result[] $results */
+        $results = $this->entityManager
+            ->getRepository(Result::class)
+            ->findBy([ 'user' => $user ]);
+
+        return Utils::apiResponse(
+            Response::HTTP_OK,
+            [ 'results' => $results ],
             $format
         );
     }

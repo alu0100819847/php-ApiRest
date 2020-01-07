@@ -245,6 +245,32 @@ paths:
               description: 'List of HTTP supported methods'
               schema:
                 type: string
+  /users/{userId}/results:
+    get:
+      tags:
+        - Users
+      summary: Returns all user's results
+      description: "Returns all user's results from the system."
+      operationId: api_users_get_results
+      parameters:
+        - $ref: '#/components/parameters/userId'
+      responses:
+        '200':
+          description: 'Array of results'
+          content:
+            application/json:
+              schema:
+                properties:
+                  usuarios: { description: 'Results array', type: array, items: { $ref: '#/components/schemas/Result' } }
+                type: object
+        '401':
+          $ref: '#/components/responses/401_Unauthorized_Response'
+        '403':
+          $ref: '#/components/responses/403_Forbidden_Response'
+        '404':
+          $ref: '#/components/responses/404_Resource_Not_Found_Response'
+      security:
+        - MiWApiSecurity: []
 components:
   schemas:
     LoginRequestBody:
