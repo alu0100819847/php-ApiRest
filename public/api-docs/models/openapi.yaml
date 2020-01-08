@@ -271,6 +271,186 @@ paths:
           $ref: '#/components/responses/404_Resource_Not_Found_Response'
       security:
         - MiWApiSecurity: []
+  /results:
+    get:
+      tags:
+        - Results
+      summary: Returns all results
+      description: 'Returns all results from the system.'
+      operationId: api_results_cget
+      responses:
+        '200':
+          description: 'Array of results'
+          content:
+            application/json:
+              schema:
+                properties:
+                  usuarios: { description: 'Results array', type: array, items: { $ref: '#/components/schemas/Result' } }
+                type: object
+        '401':
+          $ref: '#/components/responses/401_Unauthorized_Response'
+        '403':
+          $ref: '#/components/responses/403_Forbidden_Response'
+        '404':
+          $ref: '#/components/responses/404_Resource_Not_Found_Response'
+      security:
+        - MiWApiSecurity: []
+    post:
+      tags:
+        - Results
+      summary: Creates a new result
+      description: 'Creates a new result'
+      operationId: api_results_post
+      requestBody:
+        description: '`Results` properties to add to the system'
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResultData'
+      responses:
+        '201':
+          description: '`Created`: result created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '400':
+          description: '`Bad Request`: e-mail already exists'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+              example:
+                code: 400
+                message: '`Bad Request`: user doesnt exists'
+        '401':
+          $ref: '#/components/responses/401_Unauthorized_Response'
+        '403':
+          $ref: '#/components/responses/403_Forbidden_Response'
+        '422':
+          description: '`Unprocessable entity`: result or userEmail is left out'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+              example:
+                code: 422
+                message: '`Unprocessable entity`: result or userEmail is left out'
+      security:
+        - MiWApiSecurity: []
+    options:
+      tags:
+        - Results
+      summary: Provides the list of HTTP supported methods
+      description: 'Return a `Allow` header with a comma separated list of HTTP supported methods.'
+      operationId: api_results_options
+      responses:
+        '200':
+          description: '`Allow` header &lt;Response body is empty&gt;'
+          headers:
+            Allow:
+              description: 'List of HTTP supported methods'
+              schema:
+                type: string
+  '/results/{resultId}':
+    get:
+      tags:
+        - Results
+      summary: Returns a result based on a single ID
+      description: 'Returns the result identified by `resultId`.'
+      operationId: api_results_get
+      parameters:
+        - $ref: '#/components/parameters/resultId'
+      responses:
+        '200':
+          description: User
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '401':
+          $ref: '#/components/responses/401_Unauthorized_Response'
+        '403':
+          $ref: '#/components/responses/403_Forbidden_Response'
+        '404':
+          $ref: '#/components/responses/404_Resource_Not_Found_Response'
+      security:
+        - MiWApiSecurity: []
+    put:
+      tags:
+        - Results
+      summary: 'Updates a result'
+      description: 'Updates the result identified by `resultId`.'
+      operationId: api_results_put
+      parameters:
+        - $ref: '#/components/parameters/resultId'
+      requestBody:
+        description: '`Result` data to update'
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResultData'
+      responses:
+        '209':
+          description: '`Content Returned`: result previously existed and is now updated'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '400':
+          description: '`Bad Request`: user dont exists'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+              example:
+                code: 400
+                message: '`Bad Request`: user dont exists'
+        '401':
+          $ref: '#/components/responses/401_Unauthorized_Response'
+        '403':
+          $ref: '#/components/responses/403_Forbidden_Response'
+        '404':
+          $ref: '#/components/responses/404_Resource_Not_Found_Response'
+      security:
+        - MiWApiSecurity: []
+    delete:
+      tags:
+        - Results
+      summary: 'Deletes a result'
+      description: 'Deletes the result identified by `resultId`.'
+      operationId: api_results_delete
+      parameters:
+        - $ref: '#/components/parameters/resultId'
+      responses:
+        '204':
+          description: 'User deleted &lt;Response body is empty&gt;'
+        '401':
+          $ref: '#/components/responses/401_Unauthorized_Response'
+        '403':
+          $ref: '#/components/responses/403_Forbidden_Response'
+        '404':
+          $ref: '#/components/responses/404_Resource_Not_Found_Response'
+      security:
+        - MiWApiSecurity: []
+    options:
+      tags:
+        - Results
+      summary: 'Provides the list of HTTP supported methods'
+      description: 'Return a `Allow` header with a comma separated list of HTTP supported methods.'
+      operationId: api_results_options_id
+      parameters:
+        - $ref: '#/components/parameters/resultId'
+      responses:
+        '200':
+          description: '`Allow` header &lt;Response body is empty&gt;'
+          headers:
+            Allow:
+              description: 'List of HTTP supported methods'
+              schema:
+                type: string
 components:
   schemas:
     LoginRequestBody:
@@ -397,3 +577,6 @@ tags:
   -
     name: Users
     description: 'User management'
+  -
+    name: Results
+    description: 'Result management'

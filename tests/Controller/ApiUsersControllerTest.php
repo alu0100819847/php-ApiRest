@@ -564,4 +564,24 @@ class ApiUsersControllerTest extends BaseTestCase
             'deleteAction403' => [ Request::METHOD_DELETE, self::RUTA_API . '/1' ],
         ];
     }
+
+
+    /**
+     * Test GET /users/{userId}/results 200 Ok
+     *
+     * @param   array $user user returned by testPostUserAction201()
+     * @return  void
+     * @covers ::getResults()
+     * @depends testPostUserAction201
+     */
+    public function testGetResultAction200(array $user): void
+    {
+        $headers = $this->getTokenHeaders();
+        self::$client->request(Request::METHOD_GET, self::RUTA_API, [], [], $headers);
+        $response = self::$client->getResponse();
+        self::assertTrue($response->isSuccessful());
+        self::assertJson($response->getContent());
+        $results = json_decode($response->getContent(), true);
+        self::assertArrayHasKey('users', $results);
+    }
 }
