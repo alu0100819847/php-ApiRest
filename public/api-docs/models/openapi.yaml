@@ -512,6 +512,44 @@ components:
         email: User_email@example.com
         password: User_password
         roles: [ 'ROLE_USER' ]
+    Result:
+      required:
+        - id
+        - email
+        - result
+      properties:
+        id:
+          description: 'Result Id'
+          type: integer
+          format: int64
+        email:
+          description: 'User email'
+          type: string
+          format: email
+        result:
+          description: 'Result value'
+          type: integer
+          format: int64
+      type: object
+      example:
+        result:
+          id: 1508
+          email: 'miw@upm.es'
+          result: 5
+    ResultData:
+      properties:
+        email:
+          description: 'Result email'
+          type: string
+          format: email
+        result:
+          description: 'result value'
+          type: integer
+          format: int64
+      type: object
+      example:
+        email: User_email@example.com
+        result: 5
     Message:
       required:
         - code
@@ -561,6 +599,14 @@ components:
       name: userId
       in: path
       description: 'ID of user'
+      required: true
+      schema:
+        type: integer
+        format: int64
+    resultId:
+      name: resultId
+      in: path
+      description: 'ID of result'
       required: true
       schema:
         type: integer

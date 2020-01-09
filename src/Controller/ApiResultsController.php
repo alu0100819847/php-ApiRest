@@ -239,10 +239,8 @@ class ApiResultsController extends AbstractController
                 $format
             );
         }
-
         $this->entityManager->remove($result);
         $this->entityManager->flush();
-
         return new Response(null, Response::HTTP_NO_CONTENT);
     }
 
